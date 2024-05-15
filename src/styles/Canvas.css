@@ -1,0 +1,81 @@
+
+.canvas-container {
+  width: 5000px;
+  height: 1000px;
+  overflow: hidden;
+}
+
+
+.canvas {
+  width: 200%;
+  height: 200%;
+  overflow: auto;
+  cursor: crosshair;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  font-size: 15px;
+  border: 'none';
+  background-color:  rgb(221, 180, 170) ;
+  fill-opacity: 0.4;
+  /* opacity: 0.8; */
+  color: #000;
+}
+.object {
+  position: absolute;
+  border: 2px solid #000000;
+  border-radius: 3px;
+}
+
+
+.selected {
+  border: 3px solid #111;
+  outline-style: solid;
+  outline-color: rgb(217, 255, 0);
+}
+
+
+
+.delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: rgba(255, 0, 0, 0.5);
+  /* Red background with transparency */
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+
+.toolbox {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0; 
+  padding: 10px;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); 
+  
+  
+}
+
+.toolbox button {
+  margin-right: 10px; 
+  background-color: rgb(70, 129, 244);
+  color:  rgb(196, 229, 255);;
+  border-radius: 1px;
+}
+
+
+.toolbox.selected button {
+  margin-right: 10px; 
+  background-color:  rgb(70, 129, 244);
+  color:  rgb(240, 255, 196);
+  border-color: rgb(83, 148, 189);
+}
+
+
