@@ -5,6 +5,7 @@ import Object from './objects/Object';
 import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
+import { cursorStyleMap } from './../utils/cursorUtil.js'
 import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
 import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
@@ -234,20 +235,6 @@ const Canvas = () => {
         }
     };
 
-    const cursorStyle = () => {
-
-        if (selectedTool === 'rectangle') {
-            return 'crosshair';
-        }
-        else if (selectedTool === 'textbox') {
-            return 'crosshair';
-        }
-        else {
-            return 'default';
-        }
-
-    }
-    // console.log(objects);
     return (
         <div className="canvas-container" >
             <div className="canvas"
@@ -259,22 +246,24 @@ const Canvas = () => {
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 style={{
-                    cursor: cursorStyle(),
+                    cursor: cursorStyleMap[selectedTool],
                     transform: `scale(${zoom.scale})`,
                     transformOrigin: '0 0',
                 }}>
                 {
                     objects.map((object) =>
-                    (<Object key={object.id} id={object.id}
-                        objectType={object.objectType}
-                        position={object.position}
-                        width={object.width}
-                        height={object.height}
-                        isSelected={object.isSelected}
-                        handleClick={handleClick}
-                        handleDelete={handleDelete}
-                        handleIncreaseObjectHeight={handleIncreaseObjectHeight}
-                    />)
+                        (
+                            <Object key={object.id} id={object.id}
+                                objectType={object.objectType}
+                                position={object.position}
+                                width={object.width}
+                                height={object.height}
+                                isSelected={object.isSelected}
+                                handleClick={handleClick}
+                                handleDelete={handleDelete}
+                                handleIncreaseObjectHeight={handleIncreaseObjectHeight}
+                            />
+                        )
                     )
                 }
             </div>

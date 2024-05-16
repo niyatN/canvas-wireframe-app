@@ -3,7 +3,6 @@ import React from 'react';
 const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
   function handleClick(e) {
     const selectedTool = e.target.getAttribute('data-tool');
-    console.log(`Selected tool: ${selectedTool}`);
     handleSelected(selectedTool);
   }
   const tools = ["cursor", "rectangle", "textbox"]
@@ -23,6 +22,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
       <button>{'Zoom:' + zoomLevel}</button>
       
       
+
     </div>
   );
 }
