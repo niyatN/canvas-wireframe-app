@@ -1,7 +1,7 @@
 // Canvas.js
 
 import React, { useState, useRef , useEffect} from 'react';
-import Object from './Object';
+import Object from './objects/Object';
 import './../styles/Canvas.css'; 
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
