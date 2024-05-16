@@ -10,7 +10,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
     <div className="toolbox">
       {
         tools.map((tool)=> {
-          const className = selectedTool===tool? 'selected':'non-selected'
+          const className = selectedTool===tool? 'selected-button':'non-selected'
           return (
             <button key={tool} className={className} onClick={handleClick} data-tool={tool}>
               {tool}
@@ -18,11 +18,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
           )
         })
       }
-     
-      <button>{'Zoom:' + zoomLevel}</button>
-      
-      
-
+      <button>{'Zoom Scale:' + zoomLevel}</button>
     </div>
   );
 }

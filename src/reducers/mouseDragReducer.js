@@ -6,8 +6,6 @@ export const initialMouseDrag = {
 
 const mouseDragReducer = (mouseDrag, action) => {
     if (action.type === 'mouse_drag_started') {
-        console.log("cp", action.currentPosition);
-        console.log("sp", action.startPosition);
         return {
             ...mouseDrag,
             isDragging: action.isDragging,
@@ -22,8 +20,6 @@ const mouseDragReducer = (mouseDrag, action) => {
         }
     }
     else if (action.type === 'mouse_drag_continued') {
-        console.log("con")
-        console.log(mouseDrag);
         
         return {
             ...mouseDrag,

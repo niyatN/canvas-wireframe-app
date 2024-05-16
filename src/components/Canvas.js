@@ -10,6 +10,8 @@ import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
 import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
 import mouseDragReducer, { initialMouseDrag } from './../reducers/mouseDragReducer.js';
+import draggedObjectReducer, { initialDraggedObject } from './../reducers/draggedObjectReducer.js';
+
 
 const Canvas = () => {
     const canvasRef = useRef(null);
@@ -17,7 +19,7 @@ const Canvas = () => {
     const [objects, objectsDispatch] = useReducer(objectReducer, initialObjects);
     const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, initialSelectedTool);
     const [mouseDrag, mouseDragDispatch] = useReducer(mouseDragReducer, initialMouseDrag);
-
+    const [draggedObject, draggedObjectDispatch] = useReducer(draggedObjectReducer, initialDraggedObject);
     const [pinchStartDistance, setPinchStartDistance] = useState(0);
     const [pinchStartZoom, setPinchStartZoom] = useState(1);
 
@@ -163,8 +165,6 @@ const Canvas = () => {
     }
 
     const handleClick = (id) => {
-
-
         objectsDispatch({
             type: 'object_selected',
             id: id
@@ -191,7 +191,8 @@ const Canvas = () => {
     };
 
     const handleMouseDown = (e) => {
-
+        console.log("mouse down");
+        console.log(e);
         unselectAllObjects();
         const boundingRect = canvasRef.current.getBoundingClientRect();
         const x = (e.clientX - boundingRect.left) / zoom.scale;
@@ -202,10 +203,23 @@ const Canvas = () => {
             startPosition: { x: x, y: y },
             currentPosition: { x: x, y: y }
         });
+        if(selectedTool!=='cursor') {
+            draggedObjectDispatch({
+                type: 'dragged_object_created',
+                id: 'dragged-object' + uuidv4(),
+                objectType: selectedTool,
+                startPosition: {x:x, y:y},
+                currentPosition: {x:x, y:y},
+                width: 0,
+                height: 0,
+                isSelected: false
+            });
+        }
+        
     };
 
     const handleMouseMove = (e) => {
-        console.log(mouseDrag.isDragging);
+        // console.log(mouseDrag.isDragging);
         if (mouseDrag.isDragging) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
             const x = (e.clientX - boundingRect.left) / zoom.scale;
@@ -214,6 +228,16 @@ const Canvas = () => {
                 type: 'mouse_drag_continued',
                 currentPosition: { x: x, y: y }
             });
+            if(draggedObject) {
+                draggedObjectDispatch({
+                    type: 'dragged_object_updated',
+                    id: draggedObject.id,
+                    objectType: draggedObject.objectType,
+                    startPosition: draggedObject.startPosition,
+                    currentPosition: {x,y},
+                    isSelected: false
+                });
+            }
         }
     };
 
@@ -233,12 +257,20 @@ const Canvas = () => {
 
             addObject(uuidv4(), selectedTool, position, width, height, true);
         }
+        draggedObjectDispatch({
+            type: 'dragged_object_unset'
+        });
+        selectedToolDispatch({
+            type: 'seleted_tool_updated',
+            tool: 'cursor'
+        })
     };
 
     return (
         <div className="canvas-container" >
             <div className="canvas"
                 ref={canvasRef}
+                onClick={()=>console.log('clicked on canvas')}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -266,6 +298,19 @@ const Canvas = () => {
                         )
                     )
                 }
+                {draggedObject && (
+                    <Object
+                        id={draggedObject.id}
+                        objectType={draggedObject.objectType}
+                        position={draggedObject.position}
+                        width={draggedObject.width}
+                        height={draggedObject.height}
+                        isSelected={draggedObject.isSelected}
+                        handleClick={handleClick}
+                        handleDelete={handleDelete}
+                        handleIncreaseObjectHeight={handleIncreaseObjectHeight}
+                    />
+                )}
             </div>
 
             <Toolbox

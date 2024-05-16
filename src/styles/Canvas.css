@@ -59,8 +59,6 @@ textarea {
   background-color: #f0f0f0; 
   padding: 10px;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); 
-  
-  
 }
 
 .toolbox button {
@@ -71,11 +69,13 @@ textarea {
 }
 
 
-.toolbox.selected button {
+.selected-button {
   margin-right: 10px; 
-  background-color:  rgb(70, 129, 244);
-  color:  rgb(240, 255, 196);
-  border-color: rgb(83, 148, 189);
+  background-color:  rgb(244, 70, 70);
+  color:  rgb(196, 251, 255);
+  border-color: rgb(189, 83, 83);
+  border-radius: 2px;
+  font-size: 15px;
 }
 
 
