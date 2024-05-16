@@ -7,12 +7,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
 import objectReducer from './../reducers/objectsReducers.js';
 import zoomReducer from './../reducers/zoomReducers.js';
+import selectedToolReducer from './../reducers/selectedToolReducer.js';
 
 function Canvas() {
     const canvasRef = useRef(null);
     const [zoom, zoomDispatch] = useReducer(zoomReducer, {scale:1.0} );
     const [objects, objectsDispatch] = useReducer(objectReducer, []);
-    const [selectedTool, setSelectedTool] = useState('cursor');
+    const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, 'cursor');
     const [dragging, setDragging] = useState(false);
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
     const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
@@ -28,7 +29,7 @@ function Canvas() {
     }
 
 
-    const increaseObjectHeight = (id) => {
+    const handleIncreaseObjectHeight = (id) => {
         objectsDispatch(
             {
                 type: 'object_dimension_updated',
@@ -141,7 +142,10 @@ function Canvas() {
 
 
     const handleSelected = (tool) => {
-        setSelectedTool(tool);
+        selectedToolDispatch({
+            type:'seleted_tool_updated',
+            tool: tool
+        })
     }
 
     const handleClick = (id) => {
@@ -246,7 +250,7 @@ function Canvas() {
                         isSelected={object.isSelected}
                         handleClick={handleClick}
                         handleDelete={handleDelete}
-                        handleIncreaseObjectHeight={increaseObjectHeight}
+                        handleIncreaseObjectHeight={handleIncreaseObjectHeight}
                     />)
                     )
                 }
