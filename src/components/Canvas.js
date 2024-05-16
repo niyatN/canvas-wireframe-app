@@ -5,19 +5,17 @@ import Object from './objects/Object';
 import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
-import objectReducer from './../reducers/objectsReducers.js';
-import zoomReducer from './../reducers/zoomReducers.js';
-import selectedToolReducer from './../reducers/selectedToolReducer.js';
+import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
+import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
+import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
+import mouseDragReducer, { initialMouseDrag } from './../reducers/mouseDragReducer.js';
 
-function Canvas() {
+const Canvas = () => {
     const canvasRef = useRef(null);
-    const [zoom, zoomDispatch] = useReducer(zoomReducer, {scale:1.0} );
-    const [objects, objectsDispatch] = useReducer(objectReducer, []);
-    const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, 'cursor');
-    const [dragging, setDragging] = useState(false);
-    const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
-    const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
-    const [lastKeyPressTime, setLastKeyPressTime] = useState(null);
+    const [zoom, zoomDispatch] = useReducer(zoomReducer, initialZoom);
+    const [objects, objectsDispatch] = useReducer(objectReducer, initialObjects);
+    const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, initialSelectedTool);
+    const [mouseDrag, mouseDragDispatch] = useReducer(mouseDragReducer, initialMouseDrag);
 
     const [pinchStartDistance, setPinchStartDistance] = useState(0);
     const [pinchStartZoom, setPinchStartZoom] = useState(1);
@@ -39,7 +37,7 @@ function Canvas() {
             }
         );
     }
-     
+
 
 
 
@@ -100,7 +98,7 @@ function Canvas() {
             top: cursorY * scaleFactor - e.clientY,
             behavior: 'smooth',
         });
-        
+
     };
 
     const handleKeyPress = (e) => {
@@ -115,12 +113,27 @@ function Canvas() {
             handleZoom(e, -0.1);
 
         }
+        // used '=' for '+' 
         else if (e.key === '=') {
             const currentTime = Date.now();
-            if (lastKeyPressTime && currentTime - lastKeyPressTime <= 300) {
+            if (zoom.lastZoomInKeyPressTime && currentTime - zoom.lastZoomInKeyPressTime <= 300) {
                 handleZoom(e, 0.1);
             }
-            setLastKeyPressTime(currentTime);
+            zoomDispatch({
+                type: 'zoom_in_key_pressed',
+                timestamp: currentTime
+            });
+        }
+
+        else if (e.key === '-') {
+            const currentTime = Date.now();
+            if (zoom.lastZoomOutKeyPressTime && currentTime - zoom.lastZoomOutKeyPressTime <= 300) {
+                handleZoom(e, -0.1);
+            }
+            zoomDispatch({
+                type: 'zoom_out_key_pressed',
+                timestamp: currentTime
+            });
         }
     };
 
@@ -130,7 +143,7 @@ function Canvas() {
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
         };
-    }, [zoom, lastKeyPressTime]);
+    }, [zoom]);
 
     const handleDelete = (id) => {
         objectsDispatch({
@@ -143,7 +156,7 @@ function Canvas() {
 
     const handleSelected = (tool) => {
         selectedToolDispatch({
-            type:'seleted_tool_updated',
+            type: 'seleted_tool_updated',
             tool: tool
         })
     }
@@ -179,32 +192,42 @@ function Canvas() {
     const handleMouseDown = (e) => {
 
         unselectAllObjects();
-        setDragging(true);
         const boundingRect = canvasRef.current.getBoundingClientRect();
         const x = (e.clientX - boundingRect.left) / zoom.scale;
         const y = (e.clientY - boundingRect.top) / zoom.scale;
-        setStartPosition({ x, y });
-        setCurrentPosition({ x, y });
+        mouseDragDispatch({
+            type: 'mouse_drag_started',
+            isDragging: true,
+            startPosition: { x: x, y: y },
+            currentPosition: { x: x, y: y }
+        });
     };
 
     const handleMouseMove = (e) => {
-        if (dragging) {
+        console.log(mouseDrag.isDragging);
+        if (mouseDrag.isDragging) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
             const x = (e.clientX - boundingRect.left) / zoom.scale;
             const y = (e.clientY - boundingRect.top) / zoom.scale;
-            setCurrentPosition({ x, y });
+            mouseDragDispatch({
+                type: 'mouse_drag_continued',
+                currentPosition: { x: x, y: y }
+            });
         }
     };
 
 
     const handleMouseUp = () => {
-        setDragging(false);
-        const width = Math.abs(currentPosition.x - startPosition.x);
-        const height = Math.abs(currentPosition.y - startPosition.y);
+        mouseDragDispatch({
+            type: 'mouse_drag_ended',
+            isDragging: false
+        });
+        const width = Math.abs(mouseDrag.currentPosition.x - mouseDrag.startPosition.x);
+        const height = Math.abs(mouseDrag.currentPosition.y - mouseDrag.startPosition.y);
         if (width > 0 && height > 0) {
             const position = {
-                x: Math.min(startPosition.x, currentPosition.x),
-                y: Math.min(startPosition.y, currentPosition.y)
+                x: Math.min(mouseDrag.startPosition.x, mouseDrag.currentPosition.x),
+                y: Math.min(mouseDrag.startPosition.y, mouseDrag.currentPosition.y)
             };
 
             addObject(uuidv4(), selectedTool, position, width, height, true);
@@ -256,10 +279,10 @@ function Canvas() {
                 }
             </div>
 
-            <Toolbox 
-                handleSelected={handleSelected} 
+            <Toolbox
+                handleSelected={handleSelected}
                 selectedTool={selectedTool}
-                zoomLevel={zoom.scale}  />
+                zoomLevel={zoom.scale} />
         </div>
     );
 }

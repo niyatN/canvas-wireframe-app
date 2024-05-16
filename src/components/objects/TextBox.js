@@ -7,7 +7,6 @@ const TextBox = ({id, position, width, height, handleClick, handleDelete, isSele
     }
 
     const handleChangeTextArea = (e) => {
-        // console.log(e.target.value);
         setText(e.target.value);
 
         if(e.target.scrollHeight>e.target.clientHeight) {

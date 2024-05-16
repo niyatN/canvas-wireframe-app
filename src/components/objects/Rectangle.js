@@ -1,6 +1,6 @@
 
 
-const Rectangle = ({id, position, width, height, handleClick, isSelected}) => {
+const Rectangle = ({ id, position, width, height, handleClick, isSelected }) => {
     const handleSelect = (e) => {
         e.stopPropagation();
         handleClick(id);

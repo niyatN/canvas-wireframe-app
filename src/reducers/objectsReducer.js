@@ -1,3 +1,5 @@
+export const initialObjects = [];
+
 
 
 const objectsReducers = (objects, action) => {
