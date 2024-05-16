@@ -59,6 +59,9 @@ const objectsReducers = (objects, action) => {
         });
         return newObjects;
     }
+    else {
+        throw Error('Unknown action: ' + action.type);
+    }
 }
 
 

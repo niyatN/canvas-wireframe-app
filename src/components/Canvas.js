@@ -6,10 +6,11 @@ import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
 import objectReducer from './../reducers/objectsReducers.js';
+import zoomReducer from './../reducers/zoomReducers.js';
 
 function Canvas() {
     const canvasRef = useRef(null);
-    const [zoomLevel, setZoomLevel] = useState(1.0);
+    const [zoom, zoomDispatch] = useReducer(zoomReducer, {scale:1.0} );
     const [objects, objectsDispatch] = useReducer(objectReducer, []);
     const [selectedTool, setSelectedTool] = useState('cursor');
     const [dragging, setDragging] = useState(false);
@@ -49,7 +50,7 @@ function Canvas() {
             const touch2 = e.touches[1];
             const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
             setPinchStartDistance(distance);
-            setPinchStartZoom(zoomLevel);
+            setPinchStartZoom(zoom.scale);
         }
     };
 
@@ -60,7 +61,10 @@ function Canvas() {
             const touch2 = e.touches[1];
             const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
             const scale = distance / pinchStartDistance;
-            setZoomLevel(pinchStartZoom * scale);
+            zoomDispatch({
+                type: 'zoom_scale_updated',
+                scale: pinchStartZoom * scale
+            });
         }
     };
 
@@ -69,11 +73,11 @@ function Canvas() {
     };
 
     const handleZoom = (e, zoomDelta) => {
-        if (zoomLevel >= 2.5 && zoomDelta > 0) {
+        if (zoom.scale >= 2.5 && zoomDelta > 0) {
             alert(`Maximum zoom threshold is reached!`);
             return;
         }
-        if (zoomLevel <= 0.1 && zoomDelta < 0) {
+        if (zoom.scale <= 0.1 && zoomDelta < 0) {
             alert(`Minimum zoom threshold is reached!`);
             return;
         }
@@ -82,16 +86,14 @@ function Canvas() {
         const cursorX = e.clientX - boundingRect.left;
         const cursorY = e.clientY - boundingRect.top;
 
-
         const newZoomLevel =
-            Math.round((zoomLevel + zoomDelta) * 10) / 10;
+            Math.round((zoom.scale + zoomDelta) * 10) / 10;
 
-
-
-        
-        setZoomLevel(newZoomLevel);
-
-        const scaleFactor = newZoomLevel / zoomLevel;
+        zoomDispatch({
+            type: 'zoom_scale_updated',
+            scale: newZoomLevel
+        })
+        const scaleFactor = newZoomLevel / zoom.scale;
         canvas.scrollTo({
             left: cursorX * scaleFactor - e.clientX,
             top: cursorY * scaleFactor - e.clientY,
@@ -121,12 +123,13 @@ function Canvas() {
         }
     };
 
+
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress);
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
         };
-    }, [zoomLevel, lastKeyPressTime]);
+    }, [zoom, lastKeyPressTime]);
 
     const handleDelete = (id) => {
         objectsDispatch({
@@ -174,28 +177,20 @@ function Canvas() {
         unselectAllObjects();
         setDragging(true);
         const boundingRect = canvasRef.current.getBoundingClientRect();
-        const x = (e.clientX - boundingRect.left) / zoomLevel;
-        const y = (e.clientY - boundingRect.top) / zoomLevel;
+        const x = (e.clientX - boundingRect.left) / zoom.scale;
+        const y = (e.clientY - boundingRect.top) / zoom.scale;
         setStartPosition({ x, y });
         setCurrentPosition({ x, y });
     };
 
     const handleMouseMove = (e) => {
-
-
         if (dragging) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
-            const x = (e.clientX - boundingRect.left) / zoomLevel;
-            const y = (e.clientY - boundingRect.top) / zoomLevel;
+            const x = (e.clientX - boundingRect.left) / zoom.scale;
+            const y = (e.clientY - boundingRect.top) / zoom.scale;
             setCurrentPosition({ x, y });
         }
     };
-
-
-
-
-
-
 
 
     const handleMouseUp = () => {
@@ -211,6 +206,7 @@ function Canvas() {
             addObject(uuidv4(), selectedTool, position, width, height, true);
         }
     };
+
     const cursorStyle = () => {
 
         if (selectedTool === 'rectangle') {
@@ -224,7 +220,7 @@ function Canvas() {
         }
 
     }
-    console.log(objects);
+    // console.log(objects);
     return (
         <div className="canvas-container" >
             <div className="canvas"
@@ -237,7 +233,7 @@ function Canvas() {
                 onTouchEnd={handleTouchEnd}
                 style={{
                     cursor: cursorStyle(),
-                    transform: `scale(${zoomLevel})`,
+                    transform: `scale(${zoom.scale})`,
                     transformOrigin: '0 0',
                 }}>
                 {
@@ -256,8 +252,10 @@ function Canvas() {
                 }
             </div>
 
-            <Toolbox handleSelected={handleSelected} selectedTool={selectedTool}
-                zoomLevel={zoomLevel} />
+            <Toolbox 
+                handleSelected={handleSelected} 
+                selectedTool={selectedTool}
+                zoomLevel={zoom.scale}  />
         </div>
     );
 }
