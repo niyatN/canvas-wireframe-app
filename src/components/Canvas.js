@@ -1,15 +1,16 @@
 // Canvas.js
 
-import React, { useState, useRef , useEffect} from 'react';
+import React, { useState, useRef, useEffect, useReducer } from 'react';
 import Object from './objects/Object';
-import './../styles/Canvas.css'; 
+import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
+import objectReducer from './../reducers/objectsReducers.js';
 
 function Canvas() {
     const canvasRef = useRef(null);
     const [zoomLevel, setZoomLevel] = useState(1.0);
-    const [objects, setObjects] = useState([]);
+    const [objects, objectsDispatch] = useReducer(objectReducer, []);
     const [selectedTool, setSelectedTool] = useState('cursor');
     const [dragging, setDragging] = useState(false);
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
@@ -18,30 +19,25 @@ function Canvas() {
 
     const [pinchStartDistance, setPinchStartDistance] = useState(0);
     const [pinchStartZoom, setPinchStartZoom] = useState(1);
-    const clearIsSelected = () => {
-        const newObjects = objects.map((object) => {
-            return {...object, isSelected: false}
+
+    const unselectAllObjects = () => {
+        objectsDispatch({
+            type: 'all_object_deselected'
         });
-        setObjects(newObjects);
     }
 
 
     const increaseObjectHeight = (id) => {
-        const newObjects = objects.map((object) => {
-            
-            if(object.id!==id) {
-                return  object;
+        objectsDispatch(
+            {
+                type: 'object_dimension_updated',
+                id: id,
+                dw: 0,
+                dh: 10
             }
-            else {
-                // console.log(object.height);
-                // console.log({...object, height:  object.height + 10});
-                // const newHeight = object.height + 10;
-                return {...object, height:  object.height + 10}
-            }
-        });
-        
-        setObjects(newObjects);
+        );
     }
+     
 
 
 
@@ -72,12 +68,12 @@ function Canvas() {
         setPinchStartDistance(0);
     };
 
-    const handleZoom = (e, zoomDelta)=> {
-        if(zoomLevel>=2.5 && zoomDelta>0) {
+    const handleZoom = (e, zoomDelta) => {
+        if (zoomLevel >= 2.5 && zoomDelta > 0) {
             alert(`Maximum zoom threshold is reached!`);
             return;
         }
-        if(zoomLevel<=0.1 && zoomDelta<0) {
+        if (zoomLevel <= 0.1 && zoomDelta < 0) {
             alert(`Minimum zoom threshold is reached!`);
             return;
         }
@@ -86,10 +82,11 @@ function Canvas() {
         const cursorX = e.clientX - boundingRect.left;
         const cursorY = e.clientY - boundingRect.top;
 
-       
-        const newZoomLevel =  
-            Math.round((zoomLevel + zoomDelta) * 10)/10;
-        
+
+        const newZoomLevel =
+            Math.round((zoomLevel + zoomDelta) * 10) / 10;
+
+
 
         
         setZoomLevel(newZoomLevel);
@@ -102,23 +99,22 @@ function Canvas() {
         });
         
     };
+
     const handleKeyPress = (e) => {
-        // console.log(e.key);
-        // console.log(e.ctrlKey);
-        
+        // used '=' for '+' 
         if (e.key === '=' && e.ctrlKey) {
-   
-                handleZoom(e, 0.1);
+
+            handleZoom(e, 0.1);
 
         }
         else if (e.key === '-' && e.ctrlKey) {
-            
-                handleZoom(e, -0.1);
-            
+
+            handleZoom(e, -0.1);
+
         }
         else if (e.key === '=') {
             const currentTime = Date.now();
-            if ( lastKeyPressTime && currentTime - lastKeyPressTime <= 300) {
+            if (lastKeyPressTime && currentTime - lastKeyPressTime <= 300) {
                 handleZoom(e, 0.1);
             }
             setLastKeyPressTime(currentTime);
@@ -132,53 +128,50 @@ function Canvas() {
         };
     }, [zoomLevel, lastKeyPressTime]);
 
-    const getSelectedObject = () => {
-        let id = objects.filter((object)=>object.isSelected).find(()=>true);
-    }
     const handleDelete = (id) => {
-        const newObjects = objects.filter((object) => {
-            if(id===null) {
-                return !object.isSelected
-            }
-            // return object.isSelected || object.id!==id;
-            return object.id!==id;
+        objectsDispatch({
+            type: 'object_deleted',
+            id: id
         });
-        setObjects(newObjects);
     }
 
-   
+
 
     const handleSelected = (tool) => {
         setSelectedTool(tool);
     }
 
     const handleClick = (id) => {
-        // console.log(id)
-        const newObjects = objects.map((object) => {
-            // console.log(object);
-            if (object.id === id) {
-                return { ...object, isSelected: true };
-            }
-            else {
-                return { ...object, isSelected: false };
-            }
-        })
-        setObjects(newObjects);
+
+
+        objectsDispatch({
+            type: 'object_selected',
+            id: id
+        });
     }
 
 
 
-    const addObject = (id, type, position, width, height, isSelected) => {
-        if (type !== 'cursor') {
+    const addObject = (id, objectType, position, width, height, isSelected) => {
 
+        if (objectType !== 'cursor') {
+            objectsDispatch({
 
-            setObjects([...objects, { id, type, position, width, height, isSelected }]);
+                type: 'object_added',
+                objectType: objectType,
+                id: id,
+                position: position,
+                width: width,
+                height: height,
+                isSelected: isSelected
+            });
         }
+
     };
 
     const handleMouseDown = (e) => {
-        
-        clearIsSelected();
+
+        unselectAllObjects();
         setDragging(true);
         const boundingRect = canvasRef.current.getBoundingClientRect();
         const x = (e.clientX - boundingRect.left) / zoomLevel;
@@ -188,14 +181,14 @@ function Canvas() {
     };
 
     const handleMouseMove = (e) => {
-     
+
 
         if (dragging) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
             const x = (e.clientX - boundingRect.left) / zoomLevel;
             const y = (e.clientY - boundingRect.top) / zoomLevel;
             setCurrentPosition({ x, y });
-          }
+        }
     };
 
 
@@ -206,15 +199,13 @@ function Canvas() {
 
 
     const handleMouseUp = () => {
-        
-
         setDragging(false);
         const width = Math.abs(currentPosition.x - startPosition.x);
         const height = Math.abs(currentPosition.y - startPosition.y);
         if (width > 0 && height > 0) {
             const position = {
-            x: Math.min(startPosition.x, currentPosition.x),
-            y: Math.min(startPosition.y, currentPosition.y)
+                x: Math.min(startPosition.x, currentPosition.x),
+                y: Math.min(startPosition.y, currentPosition.y)
             };
 
             addObject(uuidv4(), selectedTool, position, width, height, true);
@@ -233,7 +224,7 @@ function Canvas() {
         }
 
     }
-    // console.log(objects);
+    console.log(objects);
     return (
         <div className="canvas-container" >
             <div className="canvas"
@@ -252,7 +243,7 @@ function Canvas() {
                 {
                     objects.map((object) =>
                     (<Object key={object.id} id={object.id}
-                        type={object.type}
+                        objectType={object.objectType}
                         position={object.position}
                         width={object.width}
                         height={object.height}
@@ -266,7 +257,7 @@ function Canvas() {
             </div>
 
             <Toolbox handleSelected={handleSelected} selectedTool={selectedTool}
-            zoomLevel={zoomLevel} />
+                zoomLevel={zoomLevel} />
         </div>
     );
 }

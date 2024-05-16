@@ -4,7 +4,7 @@ import TextBox from './TextBox.js';
 import Rectangle from './Rectangle.js';
 
 
-const Object = ({ id, type, position, width, height, isSelected, handleClick, handleDelete, handleIncreaseObjectHeight }) => {
+const Object = ({ id, objectType, position, width, height, isSelected, handleClick, handleDelete, handleIncreaseObjectHeight }) => {
 
     const handleSelect = (e) => {
         e.stopPropagation();
@@ -55,8 +55,8 @@ const Object = ({ id, type, position, width, height, isSelected, handleClick, ha
         };
     }, [handleKeyDown]);
 
-    const className = isSelected ? `object ${type} ` : `object ${type}`;
-    if (type === 'rectangle') {
+    // const className = isSelected ? `object ${type} ` : `object ${type}`;
+    if (objectType === 'rectangle') {
 
         return (
             <Rectangle id={id}
@@ -69,7 +69,7 @@ const Object = ({ id, type, position, width, height, isSelected, handleClick, ha
             />
         );
     }
-    else if (type === 'textbox') {
+    else if (objectType === 'textbox') {
         return (
             <TextBox id={id}
                 position={position}
@@ -81,6 +81,8 @@ const Object = ({ id, type, position, width, height, isSelected, handleClick, ha
                 handleIncreaseObjectHeight={handleIncreaseObjectHeight} />
         )
     }
+    // Should be replaced with error 
+    // throw Error('Unknown Object type: ' + type);
     else {
         return null;
     }
