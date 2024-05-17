@@ -23,7 +23,6 @@ const Canvas = () => {
     const [objects, objectsDispatch] = useReducer(objectReducer, initialObjects);
     const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, initialSelectedTool);
     const [mouseDrag, mouseDragDispatch] = useReducer(mouseDragReducer, initialMouseDrag);
-    // const [initialDistance, setInitialDistance] = useState(null);
 
     const unselectAllObjects = () => {
         objectsDispatch({
@@ -42,39 +41,6 @@ const Canvas = () => {
             }
         );
     }
-
-    // const handleTouchStart = (e) => {
-    //     console.log("handle Tiuch start");
-    //     if (e.touches.length === 2) {
-    //         const distance = Math.hypot(
-    //             e.touches[0].clientX - e.touches[1].clientX,
-    //             e.touches[0].clientY - e.touches[1].clientY
-    //         );
-    //         setInitialDistance(distance);
-    //     }
-    // };
-
-    // const handleTouchMove = (e) => {
-
-    //     console.log("handle Tiuch move");
-    //     if (e.touches.length === 2 && initialDistance) {
-    //         const distance = Math.hypot(
-    //             e.touches[0].clientX - e.touches[1].clientX,
-    //             e.touches[0].clientY - e.touches[1].clientY
-    //         );
-    //         const zoomDelta = (distance - initialDistance) / 200;
-    //         const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    //         const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-    //         handleZoom(e, zoomDelta, centerX, centerY);
-    //         setInitialDistance(distance);
-    //     }
-    // };
-
-    // const handleTouchEnd = () => {
-
-    //     console.log("handle Tiuch end");
-    //     setInitialDistance(null);
-    // };
 
     const handleZoom = (e, zoomDelta) => {
         if (zoom.scale >= 2.5 && zoomDelta > 0) {
@@ -251,9 +217,6 @@ const Canvas = () => {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-                // onTouchStart={handleTouchStart}
-                // onTouchMove={handleTouchMove}
-                // onTouchEnd={handleTouchEnd}
                 style={{
                     cursor: cursorStyleMap[selectedTool],
                     transform: `scale(${zoom.scale})`,
