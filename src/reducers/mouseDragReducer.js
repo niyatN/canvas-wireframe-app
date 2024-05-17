@@ -23,6 +23,7 @@ const mouseDragReducer = (mouseDrag, action) => {
         
         return {
             ...mouseDrag,
+            startPosition: action.startPosition,
             currentPosition: action.currentPosition
         }
     }
