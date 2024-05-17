@@ -31,3 +31,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 > `npm start build`
 To create a production build
+
+> `npm test`
+To run tests
