@@ -12,7 +12,8 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
   const tools = [
     { name: "cursor", icon: "fa-solid fa-mouse-pointer" },
     { name: "rectangle", icon: "fa-regular fa-square" },
-    { name: "textbox", icon: "fa-solid fa-font" }
+    { name: "textbox", icon: "fa-solid fa-font" },
+    { name: "ellipse", icon: "fa-regular fa-circle" }
   ];
 
   return (

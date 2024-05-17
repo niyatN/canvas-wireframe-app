@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import TextBox from './TextBox.js';
 import Rectangle from './Rectangle.js';
+import Ellipse from "./Ellipse.js";
 
 
 const Object = ({ id, objectType, position, width, height,
@@ -50,6 +51,19 @@ const Object = ({ id, objectType, position, width, height,
                 isSelected={isSelected}
                 handleIncreaseObjectHeight={handleIncreaseObjectHeight} />
         )
+    }
+    else if (objectType === 'ellipse') {
+
+        return (
+            <Ellipse id={id}
+                position={position}
+                width={width}
+                height={height}
+                handleClick={handleClick}
+                handleDelete={handleDelete}
+                isSelected={isSelected}
+            />
+        );
     }
     else {
         throw Error('Unknown Object type: ' + objectType);

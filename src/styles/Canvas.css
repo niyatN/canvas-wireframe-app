@@ -1,7 +1,7 @@
 
 .canvas-container {
   width: 5000px;
-  height: 1000px;
+  height: 2000px;
   overflow: hidden;
 }
 
@@ -10,7 +10,6 @@
   width: 200%;
   height: 200%;
   overflow: auto;
-  cursor: crosshair;
 }
 
 textarea {

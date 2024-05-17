@@ -1,5 +1,3 @@
-// Canvas.js
-
 import React, { useState, useRef, useEffect, useReducer } from 'react';
 import Object from './objects/Object';
 import './../styles/Canvas.css';
