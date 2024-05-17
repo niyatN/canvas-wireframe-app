@@ -21,8 +21,7 @@ const Canvas = () => {
     const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, initialSelectedTool);
     const [mouseDrag, mouseDragDispatch] = useReducer(mouseDragReducer, initialMouseDrag);
     const [draggedObject, draggedObjectDispatch] = useReducer(draggedObjectReducer, initialDraggedObject);
-    const [pinchStartDistance, setPinchStartDistance] = useState(0);
-    const [pinchStartZoom, setPinchStartZoom] = useState(1);
+    // const [initialDistance, setInitialDistance] = useState(null);
 
     const unselectAllObjects = () => {
         objectsDispatch({
@@ -42,38 +41,38 @@ const Canvas = () => {
         );
     }
 
+    // const handleTouchStart = (e) => {
+    //     console.log("handle Tiuch start");
+    //     if (e.touches.length === 2) {
+    //         const distance = Math.hypot(
+    //             e.touches[0].clientX - e.touches[1].clientX,
+    //             e.touches[0].clientY - e.touches[1].clientY
+    //         );
+    //         setInitialDistance(distance);
+    //     }
+    // };
 
+    // const handleTouchMove = (e) => {
 
+    //     console.log("handle Tiuch move");
+    //     if (e.touches.length === 2 && initialDistance) {
+    //         const distance = Math.hypot(
+    //             e.touches[0].clientX - e.touches[1].clientX,
+    //             e.touches[0].clientY - e.touches[1].clientY
+    //         );
+    //         const zoomDelta = (distance - initialDistance) / 200;
+    //         const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    //         const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    //         handleZoom(e, zoomDelta, centerX, centerY);
+    //         setInitialDistance(distance);
+    //     }
+    // };
 
-    const handleTouchStart = (e) => {
-        console.log("touch1 start")
-        console.log(e.touches[0]);
-        if (e.touches.length === 2) {
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-            setPinchStartDistance(distance);
-            setPinchStartZoom(zoom.scale);
-        }
-    };
+    // const handleTouchEnd = () => {
 
-    const handleTouchMove = (e) => {
-        console.log("touch move")
-        if (e.touches.length === 2) {
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-            const scale = distance / pinchStartDistance;
-            zoomDispatch({
-                type: 'zoom_scale_updated',
-                scale: pinchStartZoom * scale
-            });
-        }
-    };
-
-    const handleTouchEnd = () => {
-        setPinchStartDistance(0);
-    };
+    //     console.log("handle Tiuch end");
+    //     setInitialDistance(null);
+    // };
 
     const handleZoom = (e, zoomDelta) => {
         if (zoom.scale >= 2.5 && zoomDelta > 0) {
@@ -120,8 +119,8 @@ const Canvas = () => {
         // used '=' for '+' 
         else if (e.key === '=') {
             const currentTime = Date.now();
-            if (zoom.lastZoomInKeyPressTime 
-                    && currentTime - zoom.lastZoomInKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
+            if (zoom.lastZoomInKeyPressTime
+                && currentTime - zoom.lastZoomInKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
                 handleZoom(e, 0.1);
             }
             zoomDispatch({
@@ -132,8 +131,8 @@ const Canvas = () => {
 
         else if (e.key === '-') {
             const currentTime = Date.now();
-            if (zoom.lastZoomOutKeyPressTime 
-                    && currentTime - zoom.lastZoomOutKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
+            if (zoom.lastZoomOutKeyPressTime
+                && currentTime - zoom.lastZoomOutKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
                 handleZoom(e, -0.1);
             }
             zoomDispatch({
@@ -216,7 +215,7 @@ const Canvas = () => {
                 isSelected: false
             });
         }
-        
+
     };
 
     const handleMouseMove = (e) => {
@@ -274,9 +273,9 @@ const Canvas = () => {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+                // onTouchStart={handleTouchStart}
+                // onTouchMove={handleTouchMove}
+                // onTouchEnd={handleTouchEnd}
                 style={{
                     cursor: cursorStyleMap[selectedTool],
                     transform: `scale(${zoom.scale})`,
@@ -284,18 +283,18 @@ const Canvas = () => {
                 }}>
                 {
                     objects.map((object) =>
-                        (
-                            <Object key={object.id} id={object.id}
-                                objectType={object.objectType}
-                                position={object.position}
-                                width={object.width}
-                                height={object.height}
-                                isSelected={object.isSelected}
-                                handleClick={handleClick}
-                                handleDelete={handleDelete}
-                                handleIncreaseObjectHeight={handleIncreaseObjectHeight}
-                            />
-                        )
+                    (
+                        <Object key={object.id} id={object.id}
+                            objectType={object.objectType}
+                            position={object.position}
+                            width={object.width}
+                            height={object.height}
+                            isSelected={object.isSelected}
+                            handleClick={handleClick}
+                            handleDelete={handleDelete}
+                            handleIncreaseObjectHeight={handleIncreaseObjectHeight}
+                        />
+                    )
                     )
                 }
                 {draggedObject && (

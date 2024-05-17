@@ -26,7 +26,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
         })
       }
       {/* <button>{'Zoom Scale:' + zoomLevel}</button> */}
-      <div className="zoom-display"><i class="fa-solid fa-magnifying-glass"></i>{'Zoom Scale: ' + zoomLevel}</div>
+      <div className="zoom-display"><i className="fa-solid fa-magnifying-glass"></i>{'Zoom Scale: ' + zoomLevel}</div>
     </div>
   );
 }
