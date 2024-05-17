@@ -7,9 +7,9 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
     handleSelected(selectedTool);
   }
   const tools = [
-    { name: "cursor", icon: "fas fa-mouse-pointer" },
-    { name: "rectangle", icon: "fas fa-square" },
-    { name: "textbox", icon: "fas fa-font" }
+    { name: "cursor", icon: "fa-solid fa-mouse-pointer" },
+    { name: "rectangle", icon: "fa-regular fa-square" },
+    { name: "textbox", icon: "fa-solid fa-font" }
   ];
 
   return (
@@ -26,7 +26,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
         })
       }
       {/* <button>{'Zoom Scale:' + zoomLevel}</button> */}
-      <div className="zoom-display">{'Zoom Scale: ' + zoomLevel}</div>
+      <div className="zoom-display"><i class="fa-solid fa-magnifying-glass"></i>{'Zoom Scale: ' + zoomLevel}</div>
     </div>
   );
 }
