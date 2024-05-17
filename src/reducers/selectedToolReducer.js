@@ -1,9 +1,7 @@
 export const initialSelectedTool = 'cursor';
 
 const selectedToolReducer = (tool, action) => {
-    if (action.type === 'seleted_tool_updated') {
-        // console.log(tool);
-        // console.log(action.tool);
+    if (action.type === 'selected_tool_updated') {
         return action.tool;
     }
 

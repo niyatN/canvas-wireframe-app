@@ -18,7 +18,7 @@ textarea {
   height: 100%;
   font-size: 15px;
   border: 'none';
-  background-color:  rgb(221, 180, 170) ;
+  background-color:  rgb(238, 238, 238) ;
   fill-opacity: 0.4;
   /* opacity: 0.8; */
   color: #000;
@@ -50,18 +50,19 @@ textarea {
   border-radius: 3px;
 }
 
-
+/* toolbox related css */
+/* 
 .toolbox {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f0f0f0; 
+  background-color: #a0e3f4; 
   padding: 10px;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); 
 }
 
-.toolbox button {
+.toolbox-button {
   margin-right: 10px; 
   background-color: rgb(70, 129, 244);
   color:  rgb(196, 229, 255);;
@@ -70,12 +71,66 @@ textarea {
 
 
 .selected-button {
-  margin-right: 10px; 
   background-color:  rgb(244, 70, 70);
   color:  rgb(196, 251, 255);
-  border-color: rgb(189, 83, 83);
+  border-color: rgb(111, 83, 189);
   border-radius: 2px;
   font-size: 15px;
+  margin-right: 10px; 
 }
 
+ */
+/* Toolbox.css */
 
+.toolbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.tool-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 40px;
+  margin: 0 5px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.tool-button i {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.tool-button.selected {
+  background-color: #007bff;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+}
+
+.tool-button:hover {
+  background-color:  #c0dcf9;
+}
+
+.zoom-display {
+
+  margin-left: 10px;
+  font-size: 14px;
+  color: #333;
+}

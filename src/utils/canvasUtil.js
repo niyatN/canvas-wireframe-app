@@ -1,0 +1,1 @@
+export const doubleKeypressThresholdInMilliSeconds = 300;

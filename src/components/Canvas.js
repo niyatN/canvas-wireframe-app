@@ -6,6 +6,7 @@ import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
 import { cursorStyleMap } from './../utils/cursorUtil.js'
+import { doubleKeypressThresholdInMilliSeconds } from '../utils/canvasUtil';
 import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
 import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
@@ -119,7 +120,8 @@ const Canvas = () => {
         // used '=' for '+' 
         else if (e.key === '=') {
             const currentTime = Date.now();
-            if (zoom.lastZoomInKeyPressTime && currentTime - zoom.lastZoomInKeyPressTime <= 300) {
+            if (zoom.lastZoomInKeyPressTime 
+                    && currentTime - zoom.lastZoomInKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
                 handleZoom(e, 0.1);
             }
             zoomDispatch({
@@ -130,7 +132,8 @@ const Canvas = () => {
 
         else if (e.key === '-') {
             const currentTime = Date.now();
-            if (zoom.lastZoomOutKeyPressTime && currentTime - zoom.lastZoomOutKeyPressTime <= 300) {
+            if (zoom.lastZoomOutKeyPressTime 
+                    && currentTime - zoom.lastZoomOutKeyPressTime <= doubleKeypressThresholdInMilliSeconds) {
                 handleZoom(e, -0.1);
             }
             zoomDispatch({
@@ -159,7 +162,7 @@ const Canvas = () => {
 
     const handleSelected = (tool) => {
         selectedToolDispatch({
-            type: 'seleted_tool_updated',
+            type: 'selected_tool_updated',
             tool: tool
         })
     }
@@ -191,8 +194,6 @@ const Canvas = () => {
     };
 
     const handleMouseDown = (e) => {
-        console.log("mouse down");
-        console.log(e);
         unselectAllObjects();
         const boundingRect = canvasRef.current.getBoundingClientRect();
         const x = (e.clientX - boundingRect.left) / zoom.scale;
@@ -261,7 +262,7 @@ const Canvas = () => {
             type: 'dragged_object_unset'
         });
         selectedToolDispatch({
-            type: 'seleted_tool_updated',
+            type: 'selected_tool_updated',
             tool: 'cursor'
         })
     };
@@ -270,7 +271,6 @@ const Canvas = () => {
         <div className="canvas-container" >
             <div className="canvas"
                 ref={canvasRef}
-                onClick={()=>console.log('clicked on canvas')}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
