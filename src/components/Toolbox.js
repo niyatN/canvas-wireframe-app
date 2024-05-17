@@ -2,9 +2,12 @@ import React from 'react';
 
 const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
   function handleClick(e) {
-    e.stopPropagation();
-    const selectedTool = e.target.getAttribute('data-tool');
-    handleSelected(selectedTool);
+
+    const button = e.target.closest('[data-tool]');
+    if (button) {
+      const selectedTool = button.getAttribute('data-tool');
+      handleSelected(selectedTool);
+    }
   }
   const tools = [
     { name: "cursor", icon: "fa-solid fa-mouse-pointer" },
@@ -25,7 +28,6 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
           )
         })
       }
-      {/* <button>{'Zoom Scale:' + zoomLevel}</button> */}
       <div className="zoom-display"><i className="fa-solid fa-magnifying-glass"></i>{'Zoom Scale: ' + zoomLevel}</div>
     </div>
   );
