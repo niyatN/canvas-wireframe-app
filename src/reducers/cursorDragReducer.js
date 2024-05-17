@@ -1,11 +1,11 @@
-export const initialDraggedObject = null;
+export const initialCursorDrag = null;
 
 
-const draggedObjectReducer = (draggedObject, action ) => {
+const cursorDragReducer = (cursorDrag, action ) => {
 
-    if(action.type === 'dragged_object_created') {
+    if(action.type === 'cursor_drag_created') {
         return  {
-            ...draggedObject,
+            ...cursorDrag,
             id: action.id,
             objectType: action.objectType,
             startPosition: action.startPosition,
@@ -16,15 +16,15 @@ const draggedObjectReducer = (draggedObject, action ) => {
             isSelected: action.isSelected
         }
     }
-    if(action.type === 'dragged_object_updated') {
+    if(action.type === 'cursor_drag_updated') {
         const position = {
-            x: Math.min(draggedObject.startPosition.x, draggedObject.currentPosition.x),
-            y: Math.min(draggedObject.startPosition.y, draggedObject.currentPosition.y)
+            x: Math.min(cursorDrag.startPosition.x, cursorDrag.currentPosition.x),
+            y: Math.min(cursorDrag.startPosition.y, cursorDrag.currentPosition.y)
         };
-        const width = Math.abs(draggedObject.currentPosition.x - draggedObject.startPosition.x);
-        const height = Math.abs(draggedObject.currentPosition.y - draggedObject.startPosition.y);
+        const width = Math.abs(cursorDrag.currentPosition.x - cursorDrag.startPosition.x);
+        const height = Math.abs(cursorDrag.currentPosition.y - cursorDrag.startPosition.y);
         return  {
-            ...draggedObject,
+            ...cursorDrag,
             id: action.id,
             objectType: action.objectType,
             startPosition: action.startPosition,
@@ -35,7 +35,7 @@ const draggedObjectReducer = (draggedObject, action ) => {
             isSelected: action.isSelected
         }
     }
-    if(action.type === 'dragged_object_unset') {
+    if(action.type === 'cursor_drag_ended') {
         return  null;
     }
     else {
@@ -43,4 +43,4 @@ const draggedObjectReducer = (draggedObject, action ) => {
     }
 }
 
-export default draggedObjectReducer
+export default cursorDragReducer;

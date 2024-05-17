@@ -11,7 +11,7 @@ import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
 import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
 import mouseDragReducer, { initialMouseDrag } from './../reducers/mouseDragReducer.js';
-import draggedObjectReducer, { initialDraggedObject } from './../reducers/draggedObjectReducer.js';
+import cursorDragReducer, { initialCursorDrag } from './../reducers/cursorDragReducer.js';
 
 
 const Canvas = () => {
@@ -20,7 +20,7 @@ const Canvas = () => {
     const [objects, objectsDispatch] = useReducer(objectReducer, initialObjects);
     const [selectedTool, selectedToolDispatch] = useReducer(selectedToolReducer, initialSelectedTool);
     const [mouseDrag, mouseDragDispatch] = useReducer(mouseDragReducer, initialMouseDrag);
-    const [draggedObject, draggedObjectDispatch] = useReducer(draggedObjectReducer, initialDraggedObject);
+    const [cursorDrag, cursorDragDispatch] = useReducer(cursorDragReducer, initialCursorDrag);
     // const [initialDistance, setInitialDistance] = useState(null);
 
     const unselectAllObjects = () => {
@@ -204,9 +204,9 @@ const Canvas = () => {
             currentPosition: { x: x, y: y }
         });
         if(selectedTool!=='cursor') {
-            draggedObjectDispatch({
-                type: 'dragged_object_created',
-                id: 'dragged-object' + uuidv4(),
+            cursorDragDispatch({
+                type: 'cursor_drag_created',
+                id: 'cursor-drag-' + uuidv4(),
                 objectType: selectedTool,
                 startPosition: {x:x, y:y},
                 currentPosition: {x:x, y:y},
@@ -228,12 +228,12 @@ const Canvas = () => {
                 type: 'mouse_drag_continued',
                 currentPosition: { x: x, y: y }
             });
-            if(draggedObject) {
-                draggedObjectDispatch({
-                    type: 'dragged_object_updated',
-                    id: draggedObject.id,
-                    objectType: draggedObject.objectType,
-                    startPosition: draggedObject.startPosition,
+            if(cursorDrag) {
+                cursorDragDispatch({
+                    type: 'cursor_drag_updated',
+                    id: cursorDrag.id,
+                    objectType: cursorDrag.objectType,
+                    startPosition: cursorDrag.startPosition,
                     currentPosition: {x,y},
                     isSelected: false
                 });
@@ -257,8 +257,8 @@ const Canvas = () => {
 
             addObject(uuidv4(), selectedTool, position, width, height, true);
         }
-        draggedObjectDispatch({
-            type: 'dragged_object_unset'
+        cursorDragDispatch({
+            type: 'cursor_drag_ended'
         });
         selectedToolDispatch({
             type: 'selected_tool_updated',
@@ -297,14 +297,14 @@ const Canvas = () => {
                     )
                     )
                 }
-                {draggedObject && (
+                {cursorDrag && (
                     <Object
-                        id={draggedObject.id}
-                        objectType={draggedObject.objectType}
-                        position={draggedObject.position}
-                        width={draggedObject.width}
-                        height={draggedObject.height}
-                        isSelected={draggedObject.isSelected}
+                        id={cursorDrag.id}
+                        objectType={cursorDrag.objectType}
+                        position={cursorDrag.position}
+                        width={cursorDrag.width}
+                        height={cursorDrag.height}
+                        isSelected={cursorDrag.isSelected}
                         handleClick={handleClick}
                         handleDelete={handleDelete}
                         handleIncreaseObjectHeight={handleIncreaseObjectHeight}
