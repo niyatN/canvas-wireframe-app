@@ -224,13 +224,9 @@ const Canvas = () => {
 
 
     const handleMouseUp = () => {
-        mouseDragDispatch({
-            type: 'mouse_drag_ended',
-            isDragging: false
-        });
         const width = Math.abs(mouseDrag.currentPosition.x - mouseDrag.startPosition.x);
         const height = Math.abs(mouseDrag.currentPosition.y - mouseDrag.startPosition.y);
-        if (width > 0 && height > 0) {
+        if (mouseDrag.isDragging && width > 0 && height > 0) {
             const position = {
                 x: Math.min(mouseDrag.startPosition.x, mouseDrag.currentPosition.x),
                 y: Math.min(mouseDrag.startPosition.y, mouseDrag.currentPosition.y)
@@ -238,6 +234,10 @@ const Canvas = () => {
 
             addObject(uuidv4(), selectedTool, position, width, height, true);
         }
+        mouseDragDispatch({
+            type: 'mouse_drag_ended',
+            isDragging: false
+        });
         selectedToolDispatch({
             type: 'selected_tool_updated',
             tool: 'cursor'
@@ -276,7 +276,7 @@ const Canvas = () => {
                     )
                 }
                 {
-                    mouseDrag.isDragging === true &&
+                    mouseDrag.isDragging === true && 
                     <Object
                         id='dragged-object'
                         objectType={selectedTool}
