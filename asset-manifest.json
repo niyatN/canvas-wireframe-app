@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/canvas-wireframe-app/static/css/main.760f2663.css",
+    "main.js": "/canvas-wireframe-app/static/js/main.066f0adf.js",
+    "index.html": "/canvas-wireframe-app/index.html",
+    "main.760f2663.css.map": "/canvas-wireframe-app/static/css/main.760f2663.css.map",
+    "main.066f0adf.js.map": "/canvas-wireframe-app/static/js/main.066f0adf.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.760f2663.css",
+    "static/js/main.066f0adf.js"
+  ]
+}
