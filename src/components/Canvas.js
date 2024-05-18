@@ -3,8 +3,7 @@ import Object from './objects/Object';
 import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
-// import { cursorStyleMap } from './../utils/cursorUtil.js';
-import { getCursorStyle } from './../utils/toolsUtil';
+import { getCursorStyle, isDrawableTool } from './../utils/toolsUtil';
 import {
      doubleKeypressThresholdInMilliSeconds, 
      getWidthFromPosition, 
@@ -166,7 +165,7 @@ const Canvas = () => {
         const y = (e.clientY - boundingRect.top) / zoom.scale;
         mouseDragDispatch({
             type: 'mouse_drag_started',
-            isDragging: selectedTool!=='cursor',
+            isDragging: isDrawableTool(selectedTool),
             startPosition: { x: x, y: y },
             currentPosition: { x: x, y: y }
         });
@@ -189,16 +188,18 @@ const Canvas = () => {
 
 
     const handleMouseUp = () => {
+        if(mouseDrag.isDragging) {
         const width = Math.abs(mouseDrag.currentPosition.x - mouseDrag.startPosition.x);
         const height = Math.abs(mouseDrag.currentPosition.y - mouseDrag.startPosition.y);
-        if (mouseDrag.isDragging && width > 0 && height > 0) {
-            const position = {
-                x: Math.min(mouseDrag.startPosition.x, mouseDrag.currentPosition.x),
-                y: Math.min(mouseDrag.startPosition.y, mouseDrag.currentPosition.y)
-            };
-
-            addObject(uuidv4(), selectedTool, position, width, height, true);
+            if (width > 0 && height > 0) {
+                const position = {
+                    x: Math.min(mouseDrag.startPosition.x, mouseDrag.currentPosition.x),
+                    y: Math.min(mouseDrag.startPosition.y, mouseDrag.currentPosition.y)
+                };
+                addObject(uuidv4(), selectedTool, position, width, height, true);
+            }
         }
+        
         mouseDragDispatch({
             type: 'mouse_drag_ended',
             isDragging: false

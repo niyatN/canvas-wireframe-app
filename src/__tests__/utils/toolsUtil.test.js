@@ -1,13 +1,23 @@
-import { tools,getCursorStyle } from './../../utils/toolsUtil';
+import { tools,getCursorStyle, isDrawableTool } from './../../utils/toolsUtil';
 
-describe('getCursorStyle', () => {
-    it('should return the correct cursor style for a known tool type', () => {
+describe('toolsUtil', () => {
+    test('should return correct cursor style for a given tool type', () => {
         tools.forEach(tool => {
             expect(getCursorStyle(tool.toolType)).toBe(tool.cursorStyle);
         });
     });
 
-    it('should throw an error for an unknown tool type', () => {
-        expect(() => getCursorStyle('unknownTool')).toThrow('Unknown tool type: unknownTool');
+    test('should throw an error for an unknown tool type in getCursorStyle', () => {
+        expect(() => getCursorStyle('unknown')).toThrow('Unknown tool type: unknown');
+    });
+
+    test('should return correct isDrawable for a given tool type', () => {
+        tools.forEach(tool => {
+            expect(isDrawableTool(tool.toolType)).toBe(tool.isDrawable);
+        });
+    });
+
+    test('should return false for an unknown tool type in isDrawableTool', () => {
+        expect(isDrawableTool('cursor')).toBe(false);
     });
 });

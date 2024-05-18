@@ -34,3 +34,11 @@ export const getCursorStyle = (toolType) => {
     }
 };
 
+export const isDrawableTool = (toolType) => {
+    const tool = tools.find(t => t.toolType === toolType);
+    if (tool) {
+        return tool.isDrawable;
+    } else {
+        return false;
+    }
+};
