@@ -51,36 +51,7 @@ textarea {
 }
 
 /* toolbox related css */
-/* 
-.toolbox {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #a0e3f4; 
-  padding: 10px;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); 
-}
 
-.toolbox-button {
-  margin-right: 10px; 
-  background-color: rgb(70, 129, 244);
-  color:  rgb(196, 229, 255);;
-  border-radius: 1px;
-}
-
-
-.selected-button {
-  background-color:  rgb(244, 70, 70);
-  color:  rgb(196, 251, 255);
-  border-color: rgb(111, 83, 189);
-  border-radius: 2px;
-  font-size: 15px;
-  margin-right: 10px; 
-}
-
- */
-/* Toolbox.css */
 
 .toolbox {
   display: flex;
@@ -103,7 +74,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
+  width: 40px;
   height: 40px;
   margin: 0 5px;
   background-color: #ffffff;
@@ -114,8 +85,7 @@ textarea {
 }
 
 .tool-button i {
-  font-size: 18px;
-  margin-right: 5px;
+  font-size: 20px;
 }
 
 .tool-button.selected {

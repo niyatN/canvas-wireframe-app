@@ -3,7 +3,8 @@ import Object from './objects/Object';
 import './../styles/Canvas.css';
 import { v4 as uuidv4 } from 'uuid';
 import Toolbox from './Toolbox';
-import { cursorStyleMap } from './../utils/cursorUtil.js'
+// import { cursorStyleMap } from './../utils/cursorUtil.js';
+import { getCursorStyle } from './../utils/toolsUtil';
 import {
      doubleKeypressThresholdInMilliSeconds, 
      getWidthFromPosition, 
@@ -216,7 +217,7 @@ const Canvas = () => {
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 style={{
-                    cursor: cursorStyleMap[selectedTool],
+                    cursor: getCursorStyle(selectedTool),
                     transform: `scale(${zoom.scale})`,
                     transformOrigin: '0 0',
                 }}>
