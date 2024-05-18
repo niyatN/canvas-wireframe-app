@@ -22,6 +22,12 @@ export const tools = [
         cursorStyle: 'crosshair',
         icon: "fa-regular fa-circle",
         isDrawable: true
+    },
+    {
+        toolType: 'drag_object',
+        cursorStyle: 'grab',
+        icon: "fa-regular fa-hand-pointer",
+        isDrawable: false
     }
 ];
 

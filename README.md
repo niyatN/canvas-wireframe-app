@@ -21,6 +21,7 @@ Canvas is an application that allows users to create wireframes and basic design
         - hit 'ctrl' + '-'
         - hit '--'
 - Text box will be removed if user remove all contents. If user tries to add more content then capacity of textbox then height will be increased.
+- By selecting drag tool from toolbar, User can move/reposition objects on canvas.
 
 
 ### Available Script

@@ -9,6 +9,7 @@ import {
      getWidthFromPosition, 
      getHeightFromPosition, getTopLeftPosition 
 } from '../utils/canvasUtil.js';
+import {getClickedObject} from '../utils/objectsUtils.js'
 import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
 import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
@@ -159,22 +160,42 @@ const Canvas = () => {
     };
 
     const handleMouseDown = (e) => {
-        unselectAllObjects();
         const boundingRect = canvasRef.current.getBoundingClientRect();
         const x = (e.clientX - boundingRect.left) / zoom.scale;
         const y = (e.clientY - boundingRect.top) / zoom.scale;
-        mouseDragDispatch({
-            type: 'mouse_drag_started',
-            isDragging: isDrawableTool(selectedTool),
-            startPosition: { x: x, y: y },
-            currentPosition: { x: x, y: y }
-        });
+        const clickedObject = getClickedObject(x,y,objects);
+        if(selectedTool === 'drag_object' && clickedObject) {
+            const draggedObjectOffset = {
+                x: x - clickedObject.position.x,
+                y: y - clickedObject.position.y
+            };
+            mouseDragDispatch({
+                type: 'mouse_drag_started',
+                isDragging: false,
+                startPosition: { x, y },
+                currentPosition: { x, y },
+                isDraggingObject: true,
+                draggedObjectId: clickedObject.id,
+                draggedObjectOffset: draggedObjectOffset
+            });
+        }
+        else {
+            unselectAllObjects();
+            mouseDragDispatch({
+                type: 'mouse_drag_started',
+                isDragging: isDrawableTool(selectedTool),
+                startPosition: { x: x, y: y },
+                currentPosition: { x: x, y: y },
+                isDraggingObject: false,
+                draggedObjectOffset: {x: 0, y: 0},
+                draggedObjectId: null,
+            });
+        }
 
     };
 
     const handleMouseMove = (e) => {
-        // console.log(mouseDrag.isDragging);
-        if (mouseDrag.isDragging) {
+        if (mouseDrag.isDragging || mouseDrag.isDraggingObject) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
             const x = (e.clientX - boundingRect.left) / zoom.scale;
             const y = (e.clientY - boundingRect.top) / zoom.scale;
@@ -183,12 +204,24 @@ const Canvas = () => {
                 startPosition: mouseDrag.startPosition,
                 currentPosition: {x,y}
             });
+            
+            if (mouseDrag.isDraggingObject && mouseDrag.draggedObjectId) {
+                objectsDispatch({
+                    type: 'object_position_updated',
+                    id: mouseDrag.draggedObjectId,
+                    position: {
+                        x: x - mouseDrag.draggedObjectOffset.x,
+                        y: y - mouseDrag.draggedObjectOffset.y
+                    }
+                });
+            }
         }
     };
 
 
     const handleMouseUp = () => {
         if(mouseDrag.isDragging) {
+        
         const width = Math.abs(mouseDrag.currentPosition.x - mouseDrag.startPosition.x);
         const height = Math.abs(mouseDrag.currentPosition.y - mouseDrag.startPosition.y);
             if (width > 0 && height > 0) {
@@ -204,10 +237,12 @@ const Canvas = () => {
             type: 'mouse_drag_ended',
             isDragging: false
         });
-        selectedToolDispatch({
-            type: 'selected_tool_updated',
-            tool: 'cursor'
-        })
+        if(isDrawableTool(selectedTool)) {
+            selectedToolDispatch({
+                type: 'selected_tool_updated',
+                tool: 'cursor'
+            })
+        }
     };
 
     return (

@@ -55,6 +55,13 @@ const objectsReducers = (objects, action) => {
 
         return newObjects;
     }
+    else if(action.type === 'object_position_updated') {
+        const newObjects = objects.map(object =>
+            object.id === action.id ? 
+            { ...object, position: action.position } : object
+        );
+        return newObjects;
+    }
     else if(action.type === 'all_object_deselected') {
         const newObjects = objects.map((object) => {
             return {...object, isSelected: false}
