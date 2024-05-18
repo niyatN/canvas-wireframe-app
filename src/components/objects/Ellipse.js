@@ -14,7 +14,7 @@ const Ellipse = ({ id, position, width, height, handleClick, isSelected }) => {
         width: width + 'px',
         height: height + 'px',
         border: '2px solid blue',
-        borderRadius: '50%', // Make it a circle by setting border radius to half of width and height
+        borderRadius: '50%', 
     };
 
     return (

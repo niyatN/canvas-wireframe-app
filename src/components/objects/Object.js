@@ -12,7 +12,6 @@ const Object = ({ id, objectType, position, width, height,
     const handleKeyDown = (e) => {
 
         if (e.key === 'Delete') {
-            // console.log(e.key);
             handleDelete(null);
         }
     }
