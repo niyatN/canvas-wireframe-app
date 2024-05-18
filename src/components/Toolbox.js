@@ -10,7 +10,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
       handleSelected(selectedTool);
     }
   }
-
+  const zoomScaleInPercentage = Math.round(zoomLevel*10000)/100;
   return (
     <div className="toolbox">
       {
@@ -27,7 +27,7 @@ const Toolbox = ({handleSelected, selectedTool, zoomLevel}) => {
           )
         })
       }
-      <div className="zoom-display"><i className="fa-solid fa-magnifying-glass"></i>{'Zoom Scale: ' + zoomLevel}</div>
+      <div className="zoom-display"><i className="fa-solid fa-magnifying-glass"></i>{'Zoom: ' + zoomScaleInPercentage + '%'}</div>
     </div>
   );
 }
