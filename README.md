@@ -148,4 +148,4 @@ To create build, use following command:
 ## Demo
 
 Here's a quick demo of the Canvas-Wireframe-app:
-[![Demo Canvas-Wireframe-App](./docs/demoThumbnail.png)](./docs/demo.mov)
+[![Demo Canvas-Wireframe-App](./docs/demo.gif)](./docs/demo.mov)
