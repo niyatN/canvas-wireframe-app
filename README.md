@@ -17,6 +17,7 @@
 ## Introduction
 
 Canvas-Wireframe is a web application that allows users to create and manipulate various objects (like rectangles, textboxes, and ellipses) on a canvas. It supports zooming, object selection, and dragging.
+> You can try the app on https://niyatn.github.io/canvas-wireframe-app/
 
 ## Features
 
@@ -143,3 +144,8 @@ To create build, use following command:
     ```sh
     npm start build
     ```
+
+## Demo
+
+Here's a quick demo of the Canvas-Wireframe-app:
+[![Demo Canvas-Wireframe-App](./docs/demoThumbnail.png)](./docs/demo.mov)
