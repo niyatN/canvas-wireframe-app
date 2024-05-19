@@ -1,47 +1,144 @@
-# Getting Started with Canvas-Wireframe-App
+#  Canvas-Wireframe-App
 
-Canvas is an application that allows users to create wireframes and basic design.
+## Table of Contents
 
-## features
-- Supported objects
-    - Rectangle
-    - Textbox
-    - Ellipse
-- User can created supported objects.
-    - Select object from toolbox.
-    - drag mouse on screen from desired position till dimension
-- User can select the object.
-- User can delete object.
-    - select object and hit delete (in mac: fn + delete)
-- User can zoom in and out the canvas. threshold for zool scale is bounded(display alert on screen)
-    - To zoom in:
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [API Reference](#api-reference)
+    - [Components](#components)
+    - [Reducers](#reducers)
+    - [Utilities](#utilities)
+6. [Development](#development)
+
+
+
+## Introduction
+
+Canvas-Wireframe is a web application that allows users to create and manipulate various objects (like rectangles, textboxes, and ellipses) on a canvas. It supports zooming, object selection, and dragging.
+
+## Features
+
+- Create/Add different types of objects (rectangle, textbox, ellipse) to the canvas.
+- Select and drag objects to reposition them.
+- Zoom in and out of the canvas within threshold.
+- Persist object state and manage.
+- Select and delete object.
+
+
+
+## Installation
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/niyatN/canvas-wireframe-app.git
+
+   cd canvas-wireframe-app
+   ```
+2. Install dependencies:
+    ```sh
+    npm install
+    ```
+3. Start the development server:
+    ```sh
+    npm start    
+    ```
+4. To deploy on GitHub Pages:
+    ```sh
+    npm run deploy
+    ```
+
+## Usage
+
+### Adding Objects
+
+    - Select a tool from the toolbox (rectangle, textbox, ellipse).
+    - Click and drag on the canvas to create the object.
+    - Use the cursor tool to select and manipulate objects.
+    
+
+### Select Object
+    - Select a cursor tool or click on object to to select it.
+
+### Delete Object
+    - Select object and press 'del' ('fn' + 'del' in mac).
+
+### Zoom Object
+    - To zoom in
         - hit 'ctrl' + '+' ('=')
         - hit '++' (ie. '==')
-    - To zoom out:
+    - To zoom out
         - hit 'ctrl' + '-'
         - hit '--'
-- Text box will be removed if user remove all contents. If user tries to add more content then capacity of textbox then height will be increased.
-- By selecting drag tool from toolbar, User can move/reposition objects on canvas.
+
+## API Reference
+
+### Components
+
+`Canvas`  
+The main component that contains the canvas and handles object rendering and manipulation.
+
+`Toolbox`  
+Component that displays the tools available for drawing and manipulating objects on the canvas.
+
+`Object`  
+Generic component for rendering different types of objects (rectangle, textbox, ellipse).
+
+### Reducers
 
 
-### Available Script
+`objectsReducer.js`  
+Manages the state of objects on the canvas. Handles actions like adding, deleting, selecting, and updating object dimensions.
 
-#### How to start the server 
+eg. actions:
+- object_added
+- object_deleted
+- object_selected
+- object_dimension_updated
+- object_position_updated
+- all_object_deselected
 
-> `npm start`
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`zoomReducer.js`    
+Manages the zoom state of the canvas.
 
-#### How to create production build
-> `npm start build`
-To create a production build
+eg. actions:
+- zoom_scale_updated
+- zoom_in_key_pressed
+- zoom_out_key_pressed
 
+`selectedToolReducer.js`  
+Manages the currently selected tool.
 
-#### How run test 
-> `npm test`
-To run tests
+eg. actions:
+- selected_tool_updated
 
+`mouseDragReducer.js`   
+Manages the state of mouse drag events.
 
-#### How to deploy
-> `npm run deploy`
-to deploy app on github page. we are using gh-page to host canvas-wireframe-app
+eg. actions:
+- mouse_drag_started
+- mouse_drag_ended
+- mouse_drag_continued
+
+### Utilities
+
+`toolsUtil.js`   
+Defines the tools available for drawing and their properties like cursorStyle, icon, isDrawable.
+
+`canvasUtil.js`    
+Utility functions for canvas operations, such as calculating dimensions and positions.
+
+## Development
+
+- Running Tests
+To run the tests, use the following command:
+    ```sh
+    npm test
+    ```
+
+- Create Production build
+To create build, use following command:  
+    ```sh
+    npm start build
+    ```
