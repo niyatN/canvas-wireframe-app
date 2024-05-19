@@ -1,63 +1,84 @@
 import mouseDragReducer, { initialMouseDrag } from './../../reducers/mouseDragReducer.js';
 
 describe('mouseDragReducer', () => {
-    
+
     it('should handle mouse_drag_started', () => {
         const action = {
             type: 'mouse_drag_started',
             isDragging: true,
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 10, y: 20 }
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 10, y: 10 },
+            isDraggingObject: true,
+            draggedObjectOffset: { x: 5, y: 5 },
+            draggedObjectId: 'object-1'
         };
+
         const expectedState = {
-            ...initialMouseDrag,
             isDragging: true,
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 10, y: 20 }
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 10, y: 10 },
+            isDraggingObject: true,
+            draggedObjectOffset: { x: 5, y: 5 },
+            draggedObjectId: 'object-1'
         };
-        expect(mouseDragReducer(initialMouseDrag, action)).toEqual(expectedState);
+
+        const result = mouseDragReducer(initialMouseDrag, action);
+        expect(result).toEqual(expectedState);
     });
 
     it('should handle mouse_drag_ended', () => {
-        const action = {
-            type: 'mouse_drag_ended',
-            isDragging: false
-        };
-        const currentState = {
+        const initialState = {
             isDragging: true,
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 30, y: 40 }
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 20, y: 20 },
+            isDraggingObject: true,
+            draggedObjectId: 'object-1',
+            draggedObjectOffset: { x: 5, y: 5 }
         };
+
+        const action = { type: 'mouse_drag_ended' };
+
         const expectedState = {
-            ...currentState,
-            isDragging: false
+            ...initialState,
+            isDragging: false,
+            isDraggingObject: false,
+            draggedObjectId: null,
+            draggedObjectOffset: { x: 0, y: 0 }
         };
-        expect(mouseDragReducer(currentState, action)).toEqual(expectedState);
+
+        const result = mouseDragReducer(initialState, action);
+        expect(result).toEqual(expectedState);
     });
 
     it('should handle mouse_drag_continued', () => {
+        const initialState = {
+            isDragging: true,
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 15, y: 15 },
+            isDraggingObject: true,
+            draggedObjectId: 'object-1',
+            draggedObjectOffset: { x: 5, y: 5 }
+        };
+
         const action = {
             type: 'mouse_drag_continued',
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 30, y: 40 }
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 25, y: 25 }
         };
-        const currentState = {
-            isDragging: true,
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 15, y: 25 }
-        };
+
         const expectedState = {
-            ...currentState,
-            startPosition: { x: 10, y: 20 },
-            currentPosition: { x: 30, y: 40 }
+            ...initialState,
+            startPosition: { x: 10, y: 10 },
+            currentPosition: { x: 25, y: 25 }
         };
-        expect(mouseDragReducer(currentState, action)).toEqual(expectedState);
+
+        const result = mouseDragReducer(initialState, action);
+        expect(result).toEqual(expectedState);
     });
 
-    it('should throw an error for unknown action types', () => {
-        const action = {
-            type: 'unknown_action'
-        };
-        expect(() => mouseDragReducer(initialMouseDrag, action)).toThrow(Error('Unknown action: unknown_action'));
+    it('should throw an error for unknown action type', () => {
+        expect(() => {
+            mouseDragReducer(initialMouseDrag, { type: 'unknown_action' });
+        }).toThrow('Unknown action: unknown_action');
     });
 });

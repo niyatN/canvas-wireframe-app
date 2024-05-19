@@ -1,4 +1,4 @@
-import zoomReducer, { initialZoom } from './../../reducers/zoomReducers.js';
+import zoomReducer, { initialZoom } from './../../reducers/zoomReducer.js';
 
 describe('zoomReducer', () => {
     it('should handle zoom_scale_updated', () => {

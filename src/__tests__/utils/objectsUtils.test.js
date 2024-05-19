@@ -1,24 +1,44 @@
 import { getClickedObject } from './../../utils/objectsUtils.js'; 
 
-describe('getClickedObject function', () => {
+describe('getClickedObject', () => {
     const objects = [
-        { id: 1, position: { x: 0, y: 0 }, width: 100, height: 100 },
-        { id: 2, position: { x: 150, y: 150 }, width: 100, height: 100 },
-        { id: 3, position: { x: 50, y: 50 }, width: 50, height: 50 },
+        { id: '1', position: { x: 10, y: 10 }, width: 30, height: 30 },
+        { id: '2', position: { x: 20, y: 20 }, width: 20, height: 20 },
+        { id: '3', position: { x: 15, y: 15 }, width: 10, height: 10 }
     ];
 
-    test('returns the innermost object when clicked within its boundaries', () => {
-        const clickedObject = getClickedObject(60, 60, objects);
-        expect(clickedObject).toEqual(objects[2]);
+    it('should return the innermost object when clicked inside multiple objects', () => {
+        const x = 25;
+        const y = 25;
+        const result = getClickedObject(x, y, objects);
+        expect(result).toEqual(objects[2]); 
     });
 
-    test('returns null when clicked outside the boundaries of all objects', () => {
-        const clickedObject = getClickedObject(200, 200, objects);
-        expect(clickedObject).toBeNull();
+    it('should return null when clicked outside of any objects', () => {
+        const x = 5;
+        const y = 5;
+        const result = getClickedObject(x, y, objects);
+        expect(result).toBeNull();
     });
 
-    test('returns the innermost object when clicked within the boundaries of multiple objects', () => {
-        const clickedObject = getClickedObject(20, 20, objects);
-        expect(clickedObject).toEqual(objects[2]); 
+    it('should return the correct object when clicked inside only one object', () => {
+        const x = 12;
+        const y = 12;
+        const result = getClickedObject(x, y, objects);
+        expect(result).toEqual(objects[0]); 
+    });
+
+    it('should return null when the objects list is empty', () => {
+        const x = 25;
+        const y = 25;
+        const result = getClickedObject(x, y, []);
+        expect(result).toBeNull();
+    });
+
+    it('should return the correct object when clicked exactly on the border', () => {
+        const x = 15;
+        const y = 15;
+        const result = getClickedObject(x, y, objects);
+        expect(result).toEqual(objects[2]); // Expect the smallest area object to be returned
     });
 });

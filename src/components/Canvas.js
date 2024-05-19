@@ -11,7 +11,7 @@ import {
 } from '../utils/canvasUtil.js';
 import {getClickedObject} from '../utils/objectsUtils.js'
 import objectReducer, { initialObjects } from '../reducers/objectsReducer.js';
-import zoomReducer, { initialZoom } from './../reducers/zoomReducers.js';
+import zoomReducer, { initialZoom } from './../reducers/zoomReducer.js';
 import selectedToolReducer, { initialSelectedTool } from './../reducers/selectedToolReducer.js';
 import mouseDragReducer, { initialMouseDrag } from './../reducers/mouseDragReducer.js';
 

@@ -5,7 +5,7 @@ export const initialMouseDrag = {
     isDraggingObject: false,
     draggedObjectId: null,
     // cursor offset
-    draggedObjectIdOffset: {x: 0, y: 0}
+    draggedObjectOffset: {x: 0, y: 0}
 }
 
 const mouseDragReducer = (mouseDrag, action) => {
