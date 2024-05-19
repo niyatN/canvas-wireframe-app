@@ -17,6 +17,7 @@
 ## Introduction
 
 Canvas-Wireframe is a web application that allows users to create and manipulate various objects (like rectangles, textboxes, and ellipses) on a canvas. It supports zooming, object selection, and dragging.
+It is based on **React Framework**.
 > You can try the app on https://niyatn.github.io/canvas-wireframe-app/
 
 ## Features
@@ -72,7 +73,9 @@ Canvas-Wireframe is a web application that allows users to create and manipulate
     - To zoom out
         - hit 'ctrl' + '-'
         - hit '--'
-
+### Drag/Reposition object   
+    - Select Drag object tool from tool bar and drag object to desired position.
+    - Used Object state manipulation. **No external lib used** for it.
 ## API Reference
 
 ### Components
