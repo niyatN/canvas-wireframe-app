@@ -81,6 +81,7 @@ The main component that contains the canvas and handles object rendering and man
 
 `Toolbox`  
 Component that displays the tools available for drawing and manipulating objects on the canvas.
+show zoom level percentage.
 
 `Object`  
 Generic component for rendering different types of objects (rectangle, textbox, ellipse).
